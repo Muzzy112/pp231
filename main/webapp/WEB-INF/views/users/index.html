@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+
+<!-- Форма ввода\изменения полей юзера -->
+<form th:method="${user.id > 0}? 'PATCH' : 'POST'" th:action="@{/save}" th:object="${user}">
+
+    <input type="hidden" th:field="*{id}"> <!-- id нельзя менять, но нужно вернуть обратно в контроллер -->
+
+    <label>
+        Name:
+        <input type="text" th:field="*{name}">
+    </label>
+    <label>
+        E-mail:
+        <input type="text" th:field="*{email}">
+    </label>
+    <input type="submit" th:value="${user.id > 0}? 'edit' : 'create'">
+</form>
+
+<!-- Таблица существующих юзеров -->
+<table th:border="1">
+    <!--Названия колонок-->
+    <tr th:background="10">
+        <th>ID</th>
+        <th>NAME</th>
+        <th>E-MAIL</th>
+    </tr>
+
+    <!--Колонки с данными-->
+    <tr th:border="1" th:each="user : ${users}" th:with="id = ${user.getId()}, name = ${user.getName()}, email = ${user.getEmail()}">
+        <td th:text="${id}"></td>
+        <td th:text="${name}"></td>
+        <td th:text="${email}"></td>
+        <td>
+            <!--Кнопки редактирования и удаления-->
+            <form method="GET" th:action="@{/edit/{id}(id=${id})}">
+                <button type="submit">edit</button>
+            </form>                                                     <!--я хз, как кнопки в одну линию построить-->
+
+            <form th:method="DELETE" th:action="@{/delete/{id}(id=${id})}">
+                <input type="submit" value="delete">
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
